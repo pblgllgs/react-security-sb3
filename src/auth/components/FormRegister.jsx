@@ -14,9 +14,10 @@ import {
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { registration } from "../api/authService";
 import { useNavigate } from "react-router-dom";
 import MyTextInput from "./MyTextInput";
+import { registration } from "../services/authService";
+import Swal from "sweetalert2";
 
 const FormRegister = ({ setShowPassword, showPassword }) => {
   const navigate = useNavigate();
@@ -45,15 +46,16 @@ const FormRegister = ({ setShowPassword, showPassword }) => {
       initialValues={{
         firstname: "user",
         lastname: "user",
-        email: "user@gmail.com",
+        email: "pbl.gllgs@gmail.com",
         password: "12345",
       }}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
         const response = await registration(values);
-        console.log(response);
         const data = response.data;
         localStorage.setItem("token", data.token);
+        navigate("/login")
+        Swal.fire("Usuario registrado","El usuario fue registrado exitosamente","success")
       }}
     >
       {({ isValid, isSubmitting }) => {

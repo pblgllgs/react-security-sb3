@@ -1,17 +1,30 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./App.css";
-import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter } from "react-router-dom";
-import Rutas from "./routes/Rutas";
+import AuthProvider from "./context/AuthContext";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import App from "./App.jsx";
+import { publicRoutes } from "./routes/PublicRoutes";
+
+const router = createBrowserRouter([
+  ...publicRoutes(),
+  {
+    path: "dashboard",
+    element: (
+      <ProtectedRoutes>
+        <App />
+      </ProtectedRoutes>
+    ),
+  },
+]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider>
-      <BrowserRouter>
-        <Rutas />
-      </BrowserRouter>
+      <AuthProvider>
+      <RouterProvider router={router} />
+      </AuthProvider>
     </ChakraProvider>
   </React.StrictMode>
 );

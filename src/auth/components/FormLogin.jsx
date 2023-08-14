@@ -11,13 +11,14 @@ import {
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { getAuthentication } from "../api/authService";
 import { useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import MyTextInput from "./MyTextInput";
 import Swal from "sweetalert2";
+import { useAuth } from "../../context/AuthContext";
 
 const FormLogin = ({ setShowPassword, showPassword }) => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const handleNavidateFormLogin = () => {
     navigate("/register");
@@ -34,16 +35,21 @@ const FormLogin = ({ setShowPassword, showPassword }) => {
           .required("Password is required"),
       })}
       initialValues={{
-        email: "user@gmail.com",
+        email: "pbl.gllgs@gmail.com",
         password: "12345",
       }}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
-        const response = await getAuthentication(values);
-        console.log(response);
+        const response = await login(values);
+        console.log(response)
         const data = response.data;
         localStorage.setItem("token", data.token);
-        Swal.fire("Login",`Login success ${data.userDto.firstName}`,"success")
+        Swal.fire(
+          "Login",
+          `Login success ${data.userDto.firstName}`,
+          "success"
+        );
+        navigate("/dashboard");
       }}
     >
       {({ isValid, isSubmitting }) => {
@@ -56,7 +62,10 @@ const FormLogin = ({ setShowPassword, showPassword }) => {
               <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
-                  <Input defaultValue={"12345"} type={showPassword ? "text" : "password"} />
+                  <Input
+                    defaultValue={"12345"}
+                    type={showPassword ? "text" : "password"}
+                  />
                   <InputRightElement h={"full"}>
                     <Button
                       variant={"ghost"}
