@@ -1,28 +1,29 @@
-
 import { useEffect, useState } from "react";
-import { getCustomers } from "./services/client";
 import { Spinner, Text, Wrap, WrapItem } from "@chakra-ui/react";
 
-import { errorNotification } from "./services/notification.js";
 import jwt_decode from "jwt-decode";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "./auth/hooks/useAuth";
 import SidebarWithHeader from "./customers/shared/sideBar";
 import CardWithImage from "./customers/components/CustomerCard";
 import CreateCustomerDrawer from "./customers/components/CreateCustomerDrawer";
+import { loadingCustomers } from "./store/slice/customer/customerSlice";
+import { getCustomers } from "./customers/services/customerService.js";
+import { errorNotification } from "./utils/notification";
 
 const App = () => {
-  const { user } = useSelector(state => state.auth);
-  const { handleLogout} = useAuth()
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { handleLogout } = useAuth();
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setError] = useState("");
-
   const fetchCustomers = () => {
     setLoading(true);
     getCustomers()
       .then((response) => {
         setCustomers(response.data);
+        dispatch(loadingCustomers(response.data));
       })
       .catch((err) => {
         setError(err.response.data.message);

@@ -23,8 +23,8 @@ import {
 } from "@chakra-ui/react";
 import { SmallCloseIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
-import Swal from "sweetalert2";
 import { useCustomer } from "../hooks/useCustomer";
+import { successNotification } from "../../utils/notification";
 
 // eslint-disable-next-line no-unused-vars
 export default function CreateCustomerFormFull({
@@ -52,7 +52,7 @@ export default function CreateCustomerFormFull({
     console.log(name, gender, age, email, password);
     onClose();
     fetchCustomers();
-    Swal.fire("Created", "Created successfully", "success");
+    successNotification("Customer Created", `Customer ${name} was successfully created`);
   };
 
   return (
@@ -191,7 +191,7 @@ export default function CreateCustomerFormFull({
   );
 }
 CreateCustomerFormFull.propTypes = {
-  costumerId: PropTypes.any,
+  custumerId: PropTypes.any,
   fetchCustomers: PropTypes.any,
   onClose: PropTypes.func,
   setShowPassword: PropTypes.func,

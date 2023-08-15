@@ -1,13 +1,13 @@
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAuthentication } from "../services/authService";
 import { onLogin, onLogout } from "../../store/slice/auth/authSlice";
+import { loadingCustomers } from "../../store/slice/customer/customerSlice";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isEnabled } = useSelector((state) => state.auth);
   const handlerLogin = async ({ email, password }) => {
     try {
       const response = await getAuthentication({ email, password });
@@ -37,14 +37,14 @@ export const useAuth = () => {
   };
 
   const handlerLogout = () => {
-    dispatch(onLogout());
+    dispatch(loadingCustomers([]))
     sessionStorage.removeItem("token");
+    dispatch(onLogout());
     sessionStorage.clear();
     navigate("/login")
   };
   return {
     handlerLogin,
-    handlerLogout,
-    login: { user, isEnabled },
+    handlerLogout
   };
 };

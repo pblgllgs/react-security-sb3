@@ -1,8 +1,16 @@
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addCustomer } from "../../store/slice/customer/customerSlice";
-import { saveCustomer } from "../services/customerService";
+import {
+  addCustomer,
+  removeCustomer,
+  updateCustomer,
+} from "../../store/slice/customer/customerSlice";
+import {
+  deleteCustomer,
+  putCustomer,
+  saveCustomer,
+} from "../services/customerService";
 
 export const useCustomer = () => {
   const dispatch = useDispatch();
@@ -10,12 +18,51 @@ export const useCustomer = () => {
   const handlerAddCustomer = async (customer) => {
     try {
       const response = await saveCustomer(customer);
-      const payload = response.data
-      dispatch(
-        addCustomer(payload)
-      );
+      const payload = response.data;
+      dispatch(addCustomer(payload));
       navigate("/dashboard");
-      Swal.fire("Creación exitosa", "El customer se ha creado con exito", "success");
+    } catch (e) {
+      if (e.response?.status === 401) {
+        Swal.fire(
+          "Error de validación",
+          "Username o password incorrectos",
+          "error"
+        );
+      } else if (e.response?.status === 403) {
+        Swal.fire("Error", "Permisos insuficientes", "error");
+      } else {
+        throw new Error();
+      }
+    }
+  };
+
+  const handlerDeleteCustomer = async (customer) => {
+    try {
+      const response = await deleteCustomer(customer);
+      const payload = response.data;
+      dispatch(removeCustomer(payload));
+      navigate("/dashboard");
+    } catch (e) {
+      if (e.response?.status === 401) {
+        Swal.fire(
+          "Error de validación",
+          "Username o password incorrectos",
+          "error"
+        );
+      } else if (e.response?.status === 403) {
+        Swal.fire("Error", "Permisos insuficientes", "error");
+      } else {
+        throw new Error();
+      }
+    }
+  };
+
+  const handlerUpdateCustomer = async ( id, customer ) => {
+    try {
+      console.log(id, customer)
+      await putCustomer(id, customer);
+      dispatch(updateCustomer(id, customer));
+      navigate("/dashboard");
     } catch (e) {
       if (e.response?.status === 401) {
         Swal.fire(
@@ -32,6 +79,8 @@ export const useCustomer = () => {
   };
 
   return {
-    handlerAddCustomer
+    handlerAddCustomer,
+    handlerDeleteCustomer,
+    handlerUpdateCustomer,
   };
 };

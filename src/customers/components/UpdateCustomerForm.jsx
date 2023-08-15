@@ -46,7 +46,7 @@ const MyTextInput = ({ label, ...props }) => {
 
 // And now we can use these
 // eslint-disable-next-line react/prop-types, no-unused-vars
-const UpdateCustomerForm = ({fetchCustomers,initialValues,costumerId,onClose,}) => {
+const UpdateCustomerForm = ({fetchCustomers,initialValues,custumerId,onClose,}) => {
   return (
     <>
       <Formik
@@ -66,7 +66,7 @@ const UpdateCustomerForm = ({fetchCustomers,initialValues,costumerId,onClose,}) 
         initialValues={initialValues}
         onSubmit={async (updatedCostumer, { setSubmitting }) => {
           setSubmitting(true);
-          await updateCustomer(costumerId, updatedCostumer);
+          await updateCustomer(custumerId, updatedCostumer);
           Swal.fire("Updated", "Updated successfully", "success");
           fetchCustomers();
           setSubmitting(false);

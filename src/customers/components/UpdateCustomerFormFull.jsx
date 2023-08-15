@@ -1,6 +1,4 @@
 import PropTypes from "prop-types";
-("use client");
-
 import {
   Button,
   Flex,
@@ -23,29 +21,34 @@ import {
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useState } from "react";
-import { updateCustomer } from "../../services/client";
-import Swal from "sweetalert2";
+import { successNotification } from "../../utils/notification";
+import { useCustomer } from "../hooks/useCustomer";
 
 // eslint-disable-next-line no-unused-vars
 export default function UpdateCustomerFormFull({
   fetchCustomers,
   initialValues,
-  costumerId,
+  custumerId,
   onClose,
 }) {
+  const { handlerUpdateCustomer } = useCustomer();
   const [name, setName] = useState(initialValues.name);
   const [gender, setGender] = useState(initialValues.gender);
   const [age, setAge] = useState(initialValues.age);
 
   const handleSubmit = async () => {
-    await updateCustomer(costumerId, {
+    console.log(custumerId)
+    await handlerUpdateCustomer(custumerId, {
       name,
       gender,
       age,
     });
     onClose();
     fetchCustomers();
-    Swal.fire("Updated", "Updated successfully", "success");
+    successNotification(
+      "Customer updated",
+      `Customer ${name} was successfully updated`
+    );
   };
 
   return (
@@ -93,7 +96,7 @@ export default function UpdateCustomerFormFull({
           <FormLabel>User name</FormLabel>
           <Input
             value={name}
-            onChange={(e)=> setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             placeholder="UserName"
             _placeholder={{ color: "gray.500" }}
             type="text"
@@ -103,7 +106,7 @@ export default function UpdateCustomerFormFull({
           <FormLabel>Gender</FormLabel>
           <Select
             value={gender}
-            onChange={(e)=> setGender(e.target.value)}
+            onChange={(e) => setGender(e.target.value)}
             placeholder="Select option"
           >
             <option value="MALE">MALE</option>
@@ -121,8 +124,8 @@ export default function UpdateCustomerFormFull({
           >
             <NumberInputField />
             <NumberInputStepper>
-              <NumberIncrementStepper/>
-              <NumberDecrementStepper/>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
         </FormControl>
@@ -155,7 +158,7 @@ export default function UpdateCustomerFormFull({
   );
 }
 UpdateCustomerFormFull.propTypes = {
-  costumerId: PropTypes.any,
+  custumerId: PropTypes.any,
   fetchCustomers: PropTypes.any,
   initialValues: PropTypes.shape({
     age: PropTypes.any,

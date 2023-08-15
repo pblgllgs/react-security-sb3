@@ -22,13 +22,18 @@ export const customerSlice = createSlice({
       ];
     },
     removeCustomer: (state, { payload }) => {
-      state.customers = state.customers.filter((customer) => customer.id !== payload);
+      state.customers = state.customers.filter(
+        (customer) => customer.id !== payload
+      );
     },
-    updateUser: (state, { payload }) => {
+    updateCustomer: (state, { payload }) => {
       state.customers = state.customers.map((customer) => {
         if (customer.id === payload.id) {
           return {
-            ...payload,
+            ...customer,
+            name: payload.customer.name,
+            gender: payload.customer.gender,
+            age: payload.customer.age,
           };
         }
         return customer;
@@ -40,9 +45,5 @@ export const customerSlice = createSlice({
   },
 });
 
-export const {
-  addCustomer,
-  removeCustomer,
-  updateCustomer,
-  loadingCustomers
-} = customerSlice.actions;
+export const { addCustomer, removeCustomer, updateCustomer, loadingCustomers } =
+  customerSlice.actions;

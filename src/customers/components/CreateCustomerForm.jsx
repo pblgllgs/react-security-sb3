@@ -5,14 +5,8 @@ import {
   AlertIcon,
   Box,
   Button,
-  FormControl,
   FormLabel,
   Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Select,
   Stack,
 } from "@chakra-ui/react";
@@ -136,22 +130,12 @@ const CreateCustomerForm = ({ fetchCustomers, onClose }) => {
                 placeholder="Type your password"
               />
 
-<FormControl id="Age" isRequired>
-          <FormLabel>Age</FormLabel>
-          <NumberInput
-            defaultValue={age}
-            value={age}
-            min={1}
-            max={99}
-            onChange={(valueString) => setAge(parseInt(valueString))}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper/>
-              <NumberDecrementStepper/>
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
+              <MyTextInput
+                label="Age"
+                name="age"
+                type="text"
+                placeholder="Type your age"
+              />
 
               <MySelect label="Gender" name="gender">
                 <option value="">Select a gender type</option>

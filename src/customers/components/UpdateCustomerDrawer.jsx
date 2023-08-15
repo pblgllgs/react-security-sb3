@@ -13,7 +13,7 @@ const AddIcon = () => "+";
 const CloseIcon = () => "X";
 
 // eslint-disable-next-line react/prop-types
-const UpdateCustomerDrawer = ({fetchCustomers, initialValues, costumerId}) => {
+const UpdateCustomerDrawer = ({fetchCustomers, initialValues, custumerId}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     return (
         <>
@@ -42,7 +42,7 @@ const UpdateCustomerDrawer = ({fetchCustomers, initialValues, costumerId}) => {
                         <UpdateCustomerFormFull
                             fetchCustomers={fetchCustomers}
                             initialValues={initialValues}
-                            costumerId={costumerId}
+                            custumerId={custumerId}
                             onClose={onClose}
                         />
                     </DrawerBody>

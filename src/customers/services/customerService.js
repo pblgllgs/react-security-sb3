@@ -44,7 +44,7 @@ export const deleteCustomer = async (id) => {
   }
 };
 
-export const updateCustomer = async (id, update) => {
+export const putCustomer = async (id, update) => {
   // eslint-disable-next-line no-useless-catch
   try {
     return await axios.put(
