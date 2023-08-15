@@ -1,13 +1,15 @@
-import SidebarWithHeader from "./components/shared/sideBar";
+
 import { useEffect, useState } from "react";
 import { getCustomers } from "./services/client";
 import { Spinner, Text, Wrap, WrapItem } from "@chakra-ui/react";
-import CardwithImage from "./components/customer/CustomerCard.jsx";
-import CreateCustomerDrawer from "./components/customer/CreateCustomerDrawer.jsx";
+
 import { errorNotification } from "./services/notification.js";
 import jwt_decode from "jwt-decode";
 import { useSelector } from "react-redux";
 import { useAuth } from "./auth/hooks/useAuth";
+import SidebarWithHeader from "./customers/shared/sideBar";
+import CardWithImage from "./customers/components/CustomerCard";
+import CreateCustomerDrawer from "./customers/components/CreateCustomerDrawer";
 
 const App = () => {
   const { user } = useSelector(state => state.auth);
@@ -82,7 +84,7 @@ const App = () => {
         <Wrap justify={"center"} spacing={"30px"}>
           {customers.map((customer, index) => (
             <WrapItem key={index}>
-              <CardwithImage
+              <CardWithImage
                 {...customer}
                 imageNumber={index}
                 fetchCustomers={fetchCustomers}

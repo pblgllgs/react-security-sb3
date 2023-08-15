@@ -1,6 +1,4 @@
 import PropTypes from "prop-types";
-("use client");
-
 import {
   Button,
   Flex,
@@ -20,32 +18,41 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
-import { SmallCloseIcon } from "@chakra-ui/icons";
+import { SmallCloseIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
-import { updateCustomer } from "../../services/client";
 import Swal from "sweetalert2";
+import { useCustomer } from "../hooks/useCustomer";
 
 // eslint-disable-next-line no-unused-vars
-export default function UpdateCustomerFormFull({
+export default function CreateCustomerFormFull({
   fetchCustomers,
-  initialValues,
-  costumerId,
   onClose,
+  showPassword,
+  setShowPassword,
 }) {
-  const [name, setName] = useState(initialValues.name);
-  const [gender, setGender] = useState(initialValues.gender);
-  const [age, setAge] = useState(initialValues.age);
+  const { handlerAddCustomer } = useCustomer();
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
-    await updateCustomer(costumerId, {
+    const content = {
       name,
       gender,
       age,
-    });
+      email,
+      password,
+    };
+    await handlerAddCustomer(content);
+    console.log(name, gender, age, email, password);
     onClose();
     fetchCustomers();
-    Swal.fire("Updated", "Updated successfully", "success");
+    Swal.fire("Created", "Created successfully", "success");
   };
 
   return (
@@ -93,27 +100,56 @@ export default function UpdateCustomerFormFull({
           <FormLabel>User name</FormLabel>
           <Input
             value={name}
-            onChange={(e)=> setName(e.target.value)}
-            placeholder="UserName"
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
             _placeholder={{ color: "gray.500" }}
             type="text"
           />
+        </FormControl>
+        <FormControl id="email" isRequired>
+          <FormLabel>Email</FormLabel>
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="example@example.com"
+            _placeholder={{ color: "gray.500" }}
+            type="email"
+          />
+        </FormControl>
+        <FormControl id="password" isRequired>
+          <FormLabel>Password</FormLabel>
+          <InputGroup>
+            <Input
+              placeholder="***********"
+              value={password}
+              type={showPassword ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <InputRightElement h={"full"}>
+              <Button
+                variant={"ghost"}
+                onClick={() => setShowPassword((showPassword) => !showPassword)}
+              >
+                {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
         </FormControl>
         <FormControl id="gender" isRequired>
           <FormLabel>Gender</FormLabel>
           <Select
             value={gender}
-            onChange={(e)=> setGender(e.target.value)}
+            onChange={(e) => setGender(e.target.value)}
             placeholder="Select option"
           >
             <option value="MALE">MALE</option>
             <option value="FEMALE">FEMALE</option>
           </Select>
         </FormControl>
-        <FormControl id="password" isRequired>
+        <FormControl id="age" isRequired>
           <FormLabel>Age</FormLabel>
           <NumberInput
-            defaultValue={age}
+            defaultValue={18}
             value={age}
             min={1}
             max={99}
@@ -121,8 +157,8 @@ export default function UpdateCustomerFormFull({
           >
             <NumberInputField />
             <NumberInputStepper>
-              <NumberIncrementStepper/>
-              <NumberDecrementStepper/>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
         </FormControl>
@@ -154,13 +190,10 @@ export default function UpdateCustomerFormFull({
     </Flex>
   );
 }
-UpdateCustomerFormFull.propTypes = {
+CreateCustomerFormFull.propTypes = {
   costumerId: PropTypes.any,
   fetchCustomers: PropTypes.any,
-  initialValues: PropTypes.shape({
-    age: PropTypes.any,
-    gender: PropTypes.any,
-    name: PropTypes.any,
-  }),
-  onClose: PropTypes.any,
+  onClose: PropTypes.func,
+  setShowPassword: PropTypes.func,
+  showPassword: PropTypes.bool,
 };
