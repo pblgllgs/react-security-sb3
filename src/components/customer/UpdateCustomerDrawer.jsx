@@ -7,7 +7,7 @@ import {
     DrawerHeader,
     DrawerOverlay, useDisclosure
 } from "@chakra-ui/react";
-import UpdateCustomerForm from "./UpdateCustomerForm.jsx";
+import UpdateCustomerFormFull from "./UpdateCustomerFormFull.jsx";
 
 const AddIcon = () => "+";
 const CloseIcon = () => "X";
@@ -39,7 +39,7 @@ const UpdateCustomerDrawer = ({fetchCustomers, initialValues, costumerId}) => {
                     <DrawerHeader>Update customer</DrawerHeader>
 
                     <DrawerBody>
-                        <UpdateCustomerForm
+                        <UpdateCustomerFormFull
                             fetchCustomers={fetchCustomers}
                             initialValues={initialValues}
                             costumerId={costumerId}

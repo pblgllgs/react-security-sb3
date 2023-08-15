@@ -5,8 +5,13 @@ import { Spinner, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import CardwithImage from "./components/customer/CustomerCard.jsx";
 import CreateCustomerDrawer from "./components/customer/CreateCustomerDrawer.jsx";
 import { errorNotification } from "./services/notification.js";
+import jwt_decode from "jwt-decode";
+import { useSelector } from "react-redux";
+import { useAuth } from "./auth/hooks/useAuth";
 
 const App = () => {
+  const { user } = useSelector(state => state.auth);
+  const { handleLogout} = useAuth()
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setError] = useState("");
@@ -28,6 +33,14 @@ const App = () => {
 
   useEffect(() => {
     fetchCustomers();
+  }, []);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    var { exp, sub } = jwt_decode(token);
+    if (sub !== user.email || exp < (new Date().getTime() + 1) / 1000) {
+      handleLogout();
+    }
   }, []);
 
   if (loading) {

@@ -14,11 +14,11 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import MyTextInput from "./MyTextInput";
-import Swal from "sweetalert2";
-import { useAuth } from "../../context/AuthContext";
+// import Swal from "sweetalert2";
+import { useAuth } from "../hooks/useAuth";
 
 const FormLogin = ({ setShowPassword, showPassword }) => {
-  const { login } = useAuth();
+  const { handlerLogin } = useAuth();
   const navigate = useNavigate();
   const handleNavidateFormLogin = () => {
     navigate("/register");
@@ -40,15 +40,7 @@ const FormLogin = ({ setShowPassword, showPassword }) => {
       }}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
-        const response = await login(values);
-        console.log(response)
-        const data = response.data;
-        localStorage.setItem("token", data.token);
-        Swal.fire(
-          "Login",
-          `Login success ${data.userDto.firstName}`,
-          "success"
-        );
+        await handlerLogin(values);
         navigate("/dashboard");
       }}
     >

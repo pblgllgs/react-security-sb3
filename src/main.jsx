@@ -1,11 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { ChakraProvider } from "@chakra-ui/react";
-import AuthProvider from "./context/AuthContext";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { publicRoutes } from "./routes/PublicRoutes";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 const router = createBrowserRouter([
   ...publicRoutes(),
@@ -21,10 +22,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ChakraProvider>
-      <AuthProvider>
-      <RouterProvider router={router} />
-      </AuthProvider>
-    </ChakraProvider>
+    <Provider store={store}>
+      <ChakraProvider>
+          <RouterProvider router={router} />
+      </ChakraProvider>
+    </Provider>
   </React.StrictMode>
 );

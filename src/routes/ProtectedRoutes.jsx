@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../auth/hooks/useAuth";
 
 const ProtectedRoutes = ({ children }) => {
-  const { authenticatedStatus } = useAuth();
+  const { isEnabled } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authenticatedStatus) {
+    if (!isEnabled) {
       navigate("/");
     }
   });
 
-  return authenticatedStatus ? children : "";
+  return isEnabled ? children : "";
 };
 
 export default ProtectedRoutes;

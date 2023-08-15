@@ -1,3 +1,4 @@
+import App from "../App";
 import Login from "../auth/components/Login";
 import Register from "../auth/components/Register";
 
@@ -16,6 +17,10 @@ export const publicRoutes = () => {
       {
         path: "*",
         element: <Login />,
+      },
+      {
+        path: "/dashboard",
+        element: <App />,
       },
     ]
   )

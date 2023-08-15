@@ -30,8 +30,9 @@ import {
   FiChevronDown,
 } from "react-icons/fi";
 import Swal from "sweetalert2";
-import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/hooks/useAuth";
+import { useSelector } from 'react-redux';
 
 const LinkItems = [
   { name: "Home", icon: FiHome },
@@ -153,9 +154,10 @@ const NavItem = ({ icon, children, ...rest }) => {
 
 // eslint-disable-next-line react/prop-types
 const MobileNav = ({ onOpen, ...rest }) => {
-  const { logOut, customer } = useAuth();
+  const { handlerLogout } = useAuth()
+  const {user} = useSelector(state => state.auth)
   const navigate = useNavigate();
-  const handleLogout = () => {
+  const handleOnLogout = () => {
     Swal.fire({
       title: "Vas a cerrar sesión?",
       showDenyButton: true,
@@ -166,7 +168,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         Swal.fire("Cerrando!", "Has cerrado sesión", "success");
-        logOut();
+        handlerLogout();
         navigate("/login");
       } else if (result.isDenied) {
         Swal.fire("No se ha cerrado sesión", "", "info");
@@ -229,12 +231,10 @@ const MobileNav = ({ onOpen, ...rest }) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">{customer?.username}</Text>
-                  {customer?.roles.map((role, id) => (
-                    <Text key={id} fontSize="xs" color="gray.600">
-                      {role}
+                  <Text fontSize="sm">{user?.username}</Text>
+                    <Text fontSize="xs" color="gray.600">
+                      {user.role}
                     </Text>
-                  ))}
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />
@@ -249,7 +249,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem onClick={handleLogout}>Sign out</MenuItem>
+              <MenuItem onClick={handleOnLogout}>Sign out</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

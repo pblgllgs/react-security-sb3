@@ -71,7 +71,6 @@ const UpdateCustomerForm = ({fetchCustomers,initialValues,costumerId,onClose,}) 
           fetchCustomers();
           setSubmitting(false);
           onClose();
-          console.log(updatedCostumer)
         }}
       >
         {({ isValid, isSubmitting, dirty }) => (

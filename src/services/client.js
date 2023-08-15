@@ -5,7 +5,7 @@ export const getCustomers = async () => {
     `${import.meta.env.VITE_API_BASE_URL}/api/v1/customers`,
     {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
   );
@@ -19,7 +19,7 @@ export const saveCustomer = async (customer) => {
       customer,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       }
     );
@@ -35,7 +35,7 @@ export const deleteCustomer = async (id) => {
       `${import.meta.env.VITE_API_BASE_URL}/api/v1/customers/${id}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       }
     );
@@ -52,7 +52,7 @@ export const updateCustomer = async (id, update) => {
       update,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       }
     );
