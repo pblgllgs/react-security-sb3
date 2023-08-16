@@ -14,9 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import MyTextInput from "./MyTextInput";
 import { registration } from "../services/authService";
 import Swal from "sweetalert2";
 import { validarEmail } from "../../utils/emailValidation";
