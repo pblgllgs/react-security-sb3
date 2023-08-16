@@ -1,20 +1,16 @@
 import { useEffect, useState } from "react";
 import { Spinner, Text, Wrap, WrapItem } from "@chakra-ui/react";
-
-import jwt_decode from "jwt-decode";
-import { useDispatch, useSelector } from "react-redux";
-import { useAuth } from "./auth/hooks/useAuth";
+import { useDispatch } from "react-redux";
 import SidebarWithHeader from "./customers/shared/sideBar";
 import CardWithImage from "./customers/components/CustomerCard";
 import CreateCustomerDrawer from "./customers/components/CreateCustomerDrawer";
 import { loadingCustomers } from "./store/slice/customer/customerSlice";
 import { getCustomers } from "./customers/services/customerService.js";
 import { errorNotification } from "./utils/notification";
+import { onLogin } from "./store/slice/auth/authSlice";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const { handleLogout } = useAuth();
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setError] = useState("");
@@ -36,14 +32,9 @@ const App = () => {
 
   useEffect(() => {
     fetchCustomers();
-  }, []);
-
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    var { exp, sub } = jwt_decode(token);
-    if (sub !== user.email || exp < (new Date().getTime() + 1) / 1000) {
-      handleLogout();
-    }
+    const userSession = JSON.parse(sessionStorage.getItem("user"));
+    const isEnabled = JSON.parse(sessionStorage.getItem("isEnabled"));
+    dispatch(onLogin({ isEnabled, user: userSession }));
   }, []);
 
   if (loading) {

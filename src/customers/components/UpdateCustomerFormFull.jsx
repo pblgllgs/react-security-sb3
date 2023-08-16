@@ -37,7 +37,6 @@ export default function UpdateCustomerFormFull({
   const [age, setAge] = useState(initialValues.age);
 
   const handleSubmit = async () => {
-    console.log(custumerId)
     await handlerUpdateCustomer(custumerId, {
       name,
       gender,

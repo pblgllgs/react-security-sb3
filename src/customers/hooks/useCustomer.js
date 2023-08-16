@@ -59,7 +59,6 @@ export const useCustomer = () => {
 
   const handlerUpdateCustomer = async ( id, customer ) => {
     try {
-      console.log(id, customer)
       await putCustomer(id, customer);
       dispatch(updateCustomer(id, customer));
       navigate("/dashboard");

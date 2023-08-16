@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/hooks/useAuth";
+import { useSelector } from "react-redux";
 
 const ProtectedRoutes = ({ children }) => {
-  const { isEnabled } = useAuth();
+  const {isEnabled} = useSelector(state => state.auth)
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -88,8 +88,8 @@ const CreateCustomerForm = ({ fetchCustomers, onClose }) => {
           setSubmitting(true);
           alert(JSON.stringify(costumer, null, 2));
           saveCustomer(costumer)
+            // eslint-disable-next-line no-unused-vars
             .then((res) => {
-              console.log(res);
               successNotification(
                 "Customer saved",
                 "Costumer successfully added"
@@ -97,7 +97,6 @@ const CreateCustomerForm = ({ fetchCustomers, onClose }) => {
               fetchCustomers();
             })
             .catch((err) => {
-              console.log(err);
               errorNotification(err.code, err.response.data.message);
             })
             .finally(() => {

@@ -49,7 +49,6 @@ export default function CreateCustomerFormFull({
       password,
     };
     await handlerAddCustomer(content);
-    console.log(name, gender, age, email, password);
     onClose();
     fetchCustomers();
     successNotification("Customer Created", `Customer ${name} was successfully created`);

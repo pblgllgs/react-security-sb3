@@ -9,7 +9,8 @@ const notification = (title, description, status) => {
             description,
             status,
             isClosable: true,
-            duration: 4000
+            duration: 2000,
+            position: 'top-right'
         })
 }
 

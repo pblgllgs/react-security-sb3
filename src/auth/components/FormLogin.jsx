@@ -2,61 +2,86 @@ import PropTypes from "prop-types";
 import {
   Text,
   Stack,
-  FormLabel,
-  Input,
   Button,
   FormControl,
+  FormLabel,
   InputGroup,
+  Input,
   InputRightElement,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
+import { Field, Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import MyTextInput from "./MyTextInput";
-// import Swal from "sweetalert2";
 import { useAuth } from "../hooks/useAuth";
+import { successNotification } from "../../utils/notification";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { validarEmail } from '../../utils/emailValidation';
 
-const FormLogin = ({ setShowPassword, showPassword }) => {
+const FormLogin = ({ showPassword, setShowPassword }) => {
   const { handlerLogin } = useAuth();
   const navigate = useNavigate();
   const handleNavidateFormLogin = () => {
     navigate("/register");
   };
+
   return (
     <Formik
       validateOnMount={true}
-      validationSchema={Yup.object({
-        email: Yup.string()
-          .email("Must be a valid email")
-          .required("Email is required"),
-        password: Yup.string()
-          .max(20, "Password can not be less than 20 characters")
-          .required("Password is required"),
-      })}
       initialValues={{
-        email: "pbl.gllgs@gmail.com",
-        password: "12345",
+        email: "",
+        password: "",
       }}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
-        await handlerLogin(values);
+        const user = await handlerLogin(values);
         navigate("/dashboard");
+        successNotification(
+          "Ingreso exitoso",
+          `Usuario ${user.firstName} was successfully login`
+        );
       }}
     >
-      {({ isValid, isSubmitting }) => {
+      {({ isValid, isSubmitting, errors, touched }) => {
         return (
           <Form>
             <Stack spacing={6}>
-              <FormControl id="email" isRequired>
-                <MyTextInput label={"Email"} name={"email"} type={"email"} />
+              <FormControl isInvalid={!!errors.email && touched.email}>
+                <FormLabel htmlFor="password">Email</FormLabel>
+                <Field
+                  as={Input}
+                  id="email"
+                  name="email"
+                  type="text"
+                  variant="filled"
+                  validate={(value) => {
+                    let error;
+
+                    if (!validarEmail(value)) {
+                      error = "El formato del email no es correcto";
+                    }
+                    return error;
+                  }}
+                />
+                <FormErrorMessage>{errors.email}</FormErrorMessage>
               </FormControl>
-              <FormControl id="password" isRequired>
-                <FormLabel>Password</FormLabel>
+              <FormControl isInvalid={!!errors.password && touched.password}>
+                <FormLabel htmlFor="password">Password</FormLabel>
                 <InputGroup>
-                  <Input
-                    defaultValue={"12345"}
+                  <Field
+                    as={Input}
+                    id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
+                    variant="filled"
+                    validate={(value) => {
+                      let error;
+
+                      if (value.length < 5) {
+                        error = "Password debe tener al menos 5 caracteres";
+                      }
+
+                      return error;
+                    }}
                   />
                   <InputRightElement h={"full"}>
                     <Button
@@ -69,6 +94,7 @@ const FormLogin = ({ setShowPassword, showPassword }) => {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
+                <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
               <Stack spacing={10} pt={2}>
                 <Button

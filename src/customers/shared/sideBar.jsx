@@ -156,6 +156,7 @@ const NavItem = ({ icon, children, ...rest }) => {
 const MobileNav = ({ onOpen, ...rest }) => {
   const { handlerLogout } = useAuth()
   const {user} = useSelector(state => state.auth)
+  const role = sessionStorage.getItem("role")
   const navigate = useNavigate();
   const handleOnLogout = () => {
     Swal.fire({
@@ -233,7 +234,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
                 >
                   <Text fontSize="sm">{user?.username}</Text>
                     <Text fontSize="xs" color="gray.600">
-                      {user.role}
+                      {role}
                     </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>

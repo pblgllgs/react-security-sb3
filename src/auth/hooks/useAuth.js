@@ -19,8 +19,12 @@ export const useAuth = () => {
         })
       );
       sessionStorage.setItem("token", token);
+      sessionStorage.setItem("role",userDto.role)
+      sessionStorage.setItem("user",JSON.stringify(userDto));
+      sessionStorage.setItem("isAuth",JSON.stringify(true));
+      sessionStorage.setItem("isEnabled",JSON.stringify(userDto.enabled));
       navigate("/dashboard");
-      Swal.fire("Login", "Bienvenido", "success");
+      return userDto;
     } catch (e) {
       if (e.response?.status === 401) {
         Swal.fire(
@@ -45,6 +49,6 @@ export const useAuth = () => {
   };
   return {
     handlerLogin,
-    handlerLogout
+    handlerLogout,
   };
 };
