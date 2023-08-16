@@ -10,14 +10,16 @@ import {
   Stack,
   Button,
   Text,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import MyTextInput from "./MyTextInput";
 import { registration } from "../services/authService";
 import Swal from "sweetalert2";
+import { validarEmail } from "../../utils/emailValidation";
 
 const FormRegister = ({ setShowPassword, showPassword }) => {
   const navigate = useNavigate();
@@ -27,29 +29,14 @@ const FormRegister = ({ setShowPassword, showPassword }) => {
   return (
     <Formik
       validateOnMount={true}
-      validationSchema={Yup.object({
-        firstname: Yup.string()
-          .max(20, "First name can not be more than 20 characters")
-          .min(4, "First name can not be less than 4 characters")
-          .required("First name is required"),
-        lastname: Yup.string()
-          .max(20, "Last name can not be more than 20 characters")
-          .min(4, "Last name can not be less than 4 characters")
-          .required("Last name is required"),
-        email: Yup.string()
-          .email("Must be a valid email")
-          .required("Email is required"),
-        password: Yup.string()
-          .max(20, "Password can not be less than 20 characters")
-          .required("Password is required"),
-      })}
       initialValues={{
-        firstname: "user",
-        lastname: "user",
-        email: "pbl.gllgs@gmail.com",
-        password: "12345",
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
       }}
       onSubmit={async (values, { setSubmitting }) => {
+        console.log("🚀 ~ file: FormRegister.jsx:53 ~ onSubmit={ ~ values:", values)
         setSubmitting(true);
         const response = await registration(values);
         const data = response.data;
@@ -58,37 +45,92 @@ const FormRegister = ({ setShowPassword, showPassword }) => {
         Swal.fire("Usuario registrado","El usuario fue registrado exitosamente","success")
       }}
     >
-      {({ isValid, isSubmitting }) => {
+      {({ isValid, isSubmitting, errors, touched }) => {
         return (
           <Form>
             <Stack spacing={4}>
               <HStack>
                 <Box>
-                  <FormControl id="firstname" isRequired>
-                    <MyTextInput
-                      label={"First name"}
-                      name={"firstname"}
-                      type={"text"}
-                    />
-                  </FormControl>
+                <FormControl isInvalid={!!errors.firstname && touched.firstname}>
+                <FormLabel htmlFor="firstname">First Name</FormLabel>
+                <Field
+                  as={Input}
+                  id="firstname"
+                  name="firstname"
+                  type="text"
+                  variant="filled"
+                  validate={(value) => {
+                    let error;
+
+                    if (value.length < 2) {
+                      error = "Nombre debe tener al menos 2 caracteres";
+                    }
+                    return error;
+                  }}
+                />
+                <FormErrorMessage>{errors.firstname}</FormErrorMessage>
+              </FormControl>
                 </Box>
                 <Box>
-                  <FormControl id="lastname" isRequired>
-                    <MyTextInput
-                      label={"Last name"}
-                      name={"lastname"}
-                      type={"text"}
-                    />
-                  </FormControl>
+                <FormControl isInvalid={!!errors.lastname && touched.lastname}>
+                <FormLabel htmlFor="password">Last Name</FormLabel>
+                <Field
+                  as={Input}
+                  id="lastname"
+                  name="lastname"
+                  type="text"
+                  variant="filled"
+                  validate={(value) => {
+                    let error;
+
+                    if (value.length < 2) {
+                      error = "Password debe tener al menos 2 caracteres";
+                    }
+                    return error;
+                  }}
+                />
+                <FormErrorMessage>{errors.lastname}</FormErrorMessage>
+              </FormControl>
                 </Box>
               </HStack>
-              <FormControl id="email" isRequired>
-                <MyTextInput label={"Email"} name={"email"} type={"email"} />
+              <FormControl isInvalid={!!errors.email && touched.email}>
+                <FormLabel htmlFor="password">Email</FormLabel>
+                <Field
+                  as={Input}
+                  id="email"
+                  name="email"
+                  type="text"
+                  variant="filled"
+                  validate={(value) => {
+                    let error;
+
+                    if (!validarEmail(value)) {
+                      error = "El formato del email no es correcto";
+                    }
+                    return error;
+                  }}
+                />
+                <FormErrorMessage>{errors.email}</FormErrorMessage>
               </FormControl>
-              <FormControl id="password" isRequired>
-                <FormLabel>Password</FormLabel>
+              <FormControl isInvalid={!!errors.password && touched.password}>
+                <FormLabel htmlFor="password">Password</FormLabel>
                 <InputGroup>
-                  <Input type={showPassword ? "text" : "password"} />
+                  <Field
+                    as={Input}
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    variant="filled"
+                    validate={(value) => {
+                      let error;
+
+                      if (value.length < 5) {
+                        error = "Password debe tener al menos 5 caracteres";
+                      }
+
+                      return error;
+                    }}
+                  />
                   <InputRightElement h={"full"}>
                     <Button
                       variant={"ghost"}
@@ -100,6 +142,7 @@ const FormRegister = ({ setShowPassword, showPassword }) => {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
+                <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
               <Stack spacing={10} pt={2}>
                 <Button
